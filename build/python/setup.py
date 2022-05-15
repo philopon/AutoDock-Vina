@@ -179,6 +179,11 @@ def locate_boost():
         elif glob.glob('/usr/lib/libboost*'):
             return include_dirs, '/usr/lib'
 
+    include_dirs = '/opt/homebrew/include'
+    if os.path.isdir(include_dirs + os.path.sep + 'boost'):
+        if glob.glob('/opt/homebrew/lib/libboost*'):
+            return include_dirs, '/opt/homebrew/lib'
+
     return None, None
 
 
@@ -285,7 +290,7 @@ class CustomBuildExt(build_ext):
 
         # Patch for macOS (libboost_thread)
         # Check if we have an include "system"
-        include_system = set(self.include_dirs).intersection(['/usr/local/include', '/usr/include'])
+        include_system = set(self.include_dirs).intersection(['/usr/local/include', '/usr/include', '/opt/homebrew/include'])
         if platform.system() == 'Darwin':
             if include_system:
                 # In a conda env on macOS there is no -mt suffix at -lboost_thread
